@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body { background:#f1f1f1; font-family:微软雅黑; font-size:16px; user-select: none; }
+		#box { width:800px; height:450px; border:1px solid #066; background:#FFF; margin:20px auto 0; position:relative; top:0; left:0; }
+		#fraction { width:130px; border:1px solid #066; position:relative; top:-1px; left:-152px; background:#FFC; padding:10px; }
+		#fraction p { margin:0; font-family:微软雅黑; font-size:16px; line-height:30px; }
+		#alert { text-align:center; }
+		#qq{position: absolute;width: 32px;height: 32px;text-align: center;}
+	</style>
+</head>
+<body>
+    <div id="alert">
+        <h2>你的鼠标有多快？</h2>
+        <p>游戏说明：点击“开始游戏”，随机掉下QQ表情，点中它，千万别让它掉下去！！</p>
+        <input type="button" value="开始游戏" />
+    </div>
+    <div id="box">
+        <div id="fraction">
+            <p>得分：0 分</p>
+            <p>失分：0 分</p>
+        </div>
+        <div id="qq"></div>
+    </div>
+
+<script type="text/javascript">
+	var btn = document.getElementsByTagName('input')[0];
+	var box = document.getElementById('box');
+	var markText = document.getElementsByTagName('p');
+	var src = ['1.png','2.png','3.png','4.png','5.png','6.png','7.png','8.png','9.png','10.png','11.png'];
+	var timer = null;
+
+	btn.onclick = function(){
+		var addMark = 0;
+		var subMark = 0;
+		var qq = document.getElementById('qq');
+		btn.value = '游戏进行中...';
+		btn.disabled = 'disabled';
+
+		makeImg();
+
+		function makeImg(){
+			clearInterval(timer);
+
+			qq.style.left = Math.floor(Math.random()*801) +'px';
+			qq.style.top = '0px';
+			qq.innerHTML = '<img src="qqimg/'+src[Math.floor(Math.random()*11)]+'">'
+			
+			timer = setInterval(move,30);
+		}
+		
+		function move(){
+			var tValue = parseInt(getStyle(qq,'top'));
+			var speed = 2;
+			if(subMark + addMark >= 5){speed = 6}else if(subMark + addMark >= 10){speed = 10}
+			qq.style.top = tValue + speed +'px';
+
+			if (tValue> parseInt(getStyle(box,'height'))-32) {
+				subMark += 1;
+				markText[2].innerHTML = '失分：'+ subMark +' 分';
+				qq.innerHTML = '';
+				clearInterval(timer);	
+				if(subMark>=10){
+					markText[1].innerHTML = '得分：0 分' ;
+					markText[2].innerHTML = '失分：0 分' ;
+					btn.value = '开始游戏';
+					btn.disabled = '';
+					alert('游戏结束');
+				}else{
+					shake(box,'top');		
+					setTimeout(makeImg,400);
+				}
+				
+			}
+		}
+		
+
+		qq.onclick = function(){
+			clearInterval(timer);
+			qq.innerHTML = '<img src="qqimg/qq.png">';
+			
+			shake(this,'left');
+			addMark += 1;
+			markText[1].innerHTML = '得分：'+ addMark +' 分' ;
+			//这里定时器若设置时间过小，则QQ的left值一直不变；应是shake还没有完成的情况下就先执行了makeImg；
+			qq.timer = setTimeout(makeImg,600)
+		}
+	}
+
+
+function shake(obj,attr,endFn){
+	obj.onOff = true;
+	var attrValue = parseInt(getStyle(obj,attr));
+	var timer = null;
+	var k = 0;
+	var nums = [];
+	for(var i=15;i>0;i-=2){
+		nums.push(i,-i)
+	}
+	nums.push(0);
+
+	clearInterval(timer);
+	if(obj.onOff){
+		obj.onOff = false;
+
+		timer = setInterval(function(){
+
+			obj.style[attr] = attrValue + nums[k] + 'px';
+			k++;
+
+			if(k >= nums.length){
+				clearInterval(timer);
+				obj.onOff = true;
+				endFn&&endFn();
+			}
+		},30)
+	}
+}
+function getStyle(obj,attr){return obj.currentStyle?obj.currentStyle[attr]:getComputedStyle(obj)[attr]}
+</script>
+</body>
+</html>
