@@ -1,5 +1,6 @@
 # practice
 平常的练习
 
-响应式 --- https://weicongon.github.io/practice/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%B0%8F%E7%BB%83%E4%B9%A0/
+js基础小游戏---https://weicongon.github.io/practice/js基础小游戏/index3.html
+响应式 --- https://weicongon.github.io/practice/响应式小练习
 bootstrap小练习---https://weicongon.github.io/practice/bootstrap练习-蛋糕页
